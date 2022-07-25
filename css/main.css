@@ -1,0 +1,81 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Open Sans',sans-serif; }
+  
+  .divPrincipal{
+    display: grid;
+    grid-template-areas: "ingreso"
+    "egreso"
+    "reporte";
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .divIngresoElementos{
+    display:grid;
+    grid-template-areas: "placas pantallas";
+    grid-area: ingreso;
+    justify-items: stretch;
+    justify-content: center;
+    align-items: center;
+    background-color: #d5d3d3;
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .divIngresoPlacas{
+    grid-area: placas;
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .divIngresoPantallas{
+    grid-area: pantallas;
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .divEgresoElementos{
+    grid-area: egreso;
+    justify-self: center;
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .divReporteStocks{
+    grid-area: reporte;
+    justify-self: center;
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .divLogout{
+    grid-area: logout;
+    justify-self: center;
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .tabla_items{
+    text-align: center;
+    justify-content: center;
+    margin: 5px 0px;
+  }
+
+  .tabla_temas {
+      
+    width: 40vw;
+    background-color: #f5f5f5;
+    margin: 20px 10px; }
+    .tabla_temas td {
+      text-align: center;
+      padding: 0px 5px; }
+    .tabla_temas thead th {
+      text-align: center;
+      padding: 2px 0px;
+      border-bottom: 1px solid #808080;
+      background-color: #e2e2e2; }
+  
