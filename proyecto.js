@@ -15,7 +15,27 @@ let darSalida = [];
 let estadoFinal = [];
 let estadoFinalSelector = [];
 
-class elemento{
+class placa{
+    constructor (fechaIn, sku, linea, turno, imei, fallaLinea, fechaOut, estado,){
+        this.fechaIn = fechaIn;
+        this.sku = sku;
+        this.linea = linea;
+        this.turno = turno;
+        this.imei = imei;
+        this.fallaLinea = fallaLinea;
+        this.fechaOut = fechaOut;
+        this.estado = estado;
+        this.disponible = true;
+    }
+
+    salida(){
+        this.fechaOut = new Date();
+        this.estado = estadoFinal.value;
+        this.disponible = false;
+    }
+}
+
+class pantalla{
     constructor (fechaIn, sku, linea, turno, imei, fallaLinea, fechaOut, estado,){
         this.fechaIn = fechaIn;
         this.sku = sku;
@@ -43,6 +63,51 @@ class stock{
 }
 
 /* ++++++++++++++++++++++++++++++++++++ Functions definition ++++++++++++++++++++++++++++++++++++ */
+
+let a = 0;
+//Utilización del fetch - Trayendo datos preguardados de placas
+const traerPlacas = async () => {
+    try {
+        const dataPlacas = await fetch ("./placas.json");
+        const objetoPlacas = await dataPlacas.json();  
+        for(let e of objetoPlacas){
+            arrPlacas.push(new placa(e.fechaIn, e.sku, e.linea, e.turno, e.imei, e.fallaLinea,));
+            if(e.disponible === false){
+                arrPlacas[a].fechaOut = objetoPlacas[a].fechaOut;
+                arrPlacas[a].estado = objetoPlacas[a].estado;
+                arrPlacas[a].disponible = objetoPlacas[a].disponible;
+            }
+            a++;
+        } a=0; 
+    } catch (error) {
+        console.log(error);        
+    }
+}
+traerPlacas ();
+console.log(arrPlacas);
+
+
+//Utilización del Axios - Trayendo datos preguardados de pantallas
+const traerPantallas = async () => {
+    try {
+        let dataPantallas = await axios ("./pantallas.json");
+        let objetoPantallas = dataPantallas.data;          
+        for(let e of objetoPantallas){
+            arrPantallas.push(new pantalla(e.fechaIn, e.sku, e.linea, e.turno, e.imei, e.fallaLinea,));
+            if(e.disponible === false){
+                arrPantallas[a].fechaOut = objetoPantallas[a].fechaOut;
+                arrPantallas[a].estado = objetoPantallas[a].estado;
+                arrPantallas[a].disponible = objetoPantallas[a].disponible;
+            }
+            a++;
+        } a=0;
+    } catch (error) {
+        console.log(error);        
+    }
+}
+traerPantallas ();
+console.log(arrPantallas);
+
 
 //To describe the user's rights in the navbar
 function describeUser (usuario){
@@ -124,7 +189,7 @@ if(usuarioStorage){
             if(sku.value && linea.value && turno.value && imei.value && fallaLinea.value){
                 //si el elemento NO existe en el stock actual guarda el valor
                 if(!(arrPlacas.filter(e => e.disponible == true).some(e => e.imei === imei.value))){
-                    arrPlacas.push(new elemento(fechaIn, sku.value, linea.value, turno.value, imei.value, fallaLinea.value,));
+                    arrPlacas.push(new placa(fechaIn, sku.value, linea.value, turno.value, imei.value, fallaLinea.value,));
                     cleanInputs(lineaPlaca,imeiPlaca,fallaPlaca);
                     Swal.fire({
                         position:'bottom-end',
@@ -171,7 +236,7 @@ if(usuarioStorage){
 
             if(sku.value && linea.value && turno.value && imei.value && fallaLinea.value){
                 if(!(arrPantallas.filter(e => e.disponible == true).some(e => e.imei === imei.value))){
-                    arrPantallas.push(new elemento(fechaIn, sku.value, linea.value, turno.value, imei.value, fallaLinea.value,));                                
+                    arrPantallas.push(new pantalla(fechaIn, sku.value, linea.value, turno.value, imei.value, fallaLinea.value,));                                
                     cleanInputs(lineaPantalla,imeiPantalla,fallaPantalla);
                     Swal.fire({
                         position:'bottom-end',
@@ -441,7 +506,7 @@ if(usuarioStorage){
                         if(sku.value && linea.value && turno.value && imei.value && fallaLinea.value){
                             //si el elemento NO existe en el stock actual guarda el valor
                             if(!(arrPlacas.filter(e => e.disponible == true).some(e => e.imei === imei.value))){
-                                arrPlacas.push(new elemento(fechaIn, sku.value, linea.value, turno.value, imei.value, fallaLinea.value,));
+                                arrPlacas.push(new placa(fechaIn, sku.value, linea.value, turno.value, imei.value, fallaLinea.value,));
                                 cleanInputs(lineaPlaca,imeiPlaca,fallaPlaca);
                                 Swal.fire({
                                     position:'bottom-end',
@@ -488,7 +553,7 @@ if(usuarioStorage){
 
                         if(sku.value && linea.value && turno.value && imei.value && fallaLinea.value){
                             if(!(arrPantallas.filter(e => e.disponible == true).some(e => e.imei === imei.value))){
-                                arrPantallas.push(new elemento(fechaIn, sku.value, linea.value, turno.value, imei.value, fallaLinea.value,));                                
+                                arrPantallas.push(new pantalla(fechaIn, sku.value, linea.value, turno.value, imei.value, fallaLinea.value,));                                
                                 cleanInputs(lineaPantalla,imeiPantalla,fallaPantalla);
                                 Swal.fire({
                                     position:'bottom-end',
