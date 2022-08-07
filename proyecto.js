@@ -508,23 +508,17 @@ if(usuarioStorage){
 
   //Opciones habilitadas para el usuario "admin"
     if(sessionStorage.getItem("usuario")==="admin"){                
-        /* ---------------------------- Funcionamiento del modal de placas ----------------------------*/
         modalPlacas();
-
-        /* ---------------------------- Funcionamiento del modal de pantallas ----------------------------*/
         modalPantallas();
-
-        /* ---------------------------- Funcionamiento del modal de egreso ----------------------------*/
         modalEgreso();
     }
 
   //Opciones habilitadas para el usuario "admin" y "usuario"
   if(sessionStorage.getItem("usuario")==="admin" || sessionStorage.getItem("usuario") === "usuario"){
-        /* -------------- Funcionamiento del modal de Reportes -------------- */
         modalReportes();
     }
-   
 
+//User not logged in
 }else{	
     const { usuario: user } = Swal.fire({
         title: 'Selecione su modo de uso',
@@ -553,14 +547,8 @@ if(usuarioStorage){
 
                 //Opciones habilitadas para el usuario "admin"
                 if(sessionStorage.getItem("usuario")==="admin"){
-               
-                    /* ---------------------------- Funcionamiento del modal de placas ----------------------------*/
                     modalPlacas();
-
-                    /* ---------------------------- Funcionamiento del modal de pantallas ----------------------------*/
                     modalPantallas();
-
-                    /* ---------------------------- Funcionamiento del modal de egreso ----------------------------*/
                     modalEgreso();
                 }
                 
