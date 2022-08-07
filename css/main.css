@@ -11,7 +11,6 @@
     justify-content: center;
     align-items: center;
     margin: 20px;
-    padding: 20px;
   }
 
   .divIngresoElementos{
@@ -23,7 +22,6 @@
     align-items: center;
     background-color: #d5d3d3;
     margin: 20px;
-    padding: 20px;
   }
 
   .divIngresoPlacas{
@@ -42,21 +40,18 @@
     grid-area: egreso;
     justify-self: center;
     margin: 20px;
-    padding: 20px;
   }
 
   .divReporteStocks{
     grid-area: reporte;
     justify-self: center;
     margin: 20px;
-    padding: 20px;
   }
 
   .divLogout{
     grid-area: logout;
     justify-self: center;
     margin: 20px;
-    padding: 20px;
   }
 
   .tabla_items{
@@ -78,4 +73,30 @@
       padding: 2px 0px;
       border-bottom: 1px solid #808080;
       background-color: #e2e2e2; }
-  
+
+@media (max-width: 768px) {
+  .divIngresoElementos{
+    grid-template-areas: "placas" "pantallas";
+    text-align: center;
+  }
+}
+
+@media (max-width: 375px) {
+  .divIngresoElementos{
+    text-align: center;
+    margin: 5px;
+  }
+  .divIngresoPlacas{
+    margin: 15px;
+    padding: 0px;
+  }
+
+  .divIngresoPantallas{
+    margin: 15px;
+    padding: 0px;
+  }
+
+  .divPrincipal{
+    margin:5px ;
+  }
+}

@@ -30,7 +30,7 @@ class placa{
 
     salida(){
         this.fechaOut = new Date();
-        this.estado = estadoFinal.value;
+        this.estado = estadoFinal;
         this.disponible = false;
     }
 }
@@ -50,7 +50,7 @@ class pantalla{
 
     salida(){
         this.fechaOut = new Date();
-        this.estado = estadoFinal.value;
+        this.estado = estadoFinal;
         this.disponible = false;
     }
 }
@@ -64,21 +64,21 @@ class stock{
 
 /* ++++++++++++++++++++++++++++++++++++ Functions definition ++++++++++++++++++++++++++++++++++++ */
 
-let a = 0;
 //Utilización del fetch - Trayendo datos preguardados de placas
 const traerPlacas = async () => {
+    let a = 0;
     try {
         const dataPlacas = await fetch ("./placas.json");
         const objetoPlacas = await dataPlacas.json();  
         for(let e of objetoPlacas){
-            arrPlacas.push(new placa(e.fechaIn, e.sku, e.linea, e.turno, e.imei, e.fallaLinea,));
+            arrPlacas.push(new placa(new Date(Date.parse(e.fechaIn)), e.sku, e.linea, e.turno, e.imei, e.fallaLinea,));
             if(e.disponible === false){
-                arrPlacas[a].fechaOut = objetoPlacas[a].fechaOut;
+                arrPlacas[a].fechaOut = new Date(Date.parse(objetoPlacas[a].fechaOut));
                 arrPlacas[a].estado = objetoPlacas[a].estado;
                 arrPlacas[a].disponible = objetoPlacas[a].disponible;
             }
             a++;
-        } a=0; 
+        }  
     } catch (error) {
         console.log(error);        
     }
@@ -89,18 +89,19 @@ console.log(arrPlacas);
 
 //Utilización del Axios - Trayendo datos preguardados de pantallas
 const traerPantallas = async () => {
+    let a = 0;
     try {
         let dataPantallas = await axios ("./pantallas.json");
         let objetoPantallas = dataPantallas.data;          
         for(let e of objetoPantallas){
-            arrPantallas.push(new pantalla(e.fechaIn, e.sku, e.linea, e.turno, e.imei, e.fallaLinea,));
+            arrPantallas.push(new pantalla(new Date(Date.parse(e.fechaIn)), e.sku, e.linea, e.turno, e.imei, e.fallaLinea,));
             if(e.disponible === false){
-                arrPantallas[a].fechaOut = objetoPantallas[a].fechaOut;
+                arrPantallas[a].fechaOut = new Date(Date.parse(objetoPantallas[a].fechaOut));
                 arrPantallas[a].estado = objetoPantallas[a].estado;
                 arrPantallas[a].disponible = objetoPantallas[a].disponible;
             }
             a++;
-        } a=0;
+        }
     } catch (error) {
         console.log(error);        
     }
@@ -142,10 +143,32 @@ function eraseTable (element){
     }
 }
 
+//To clean info of "Buscar"
+function eraseInfo(){
+    document.getElementById("buscarFechaIn").innerHTML = "Fecha In:";
+    document.getElementById("buscarModelo").innerHTML = "Modelo:";
+    document.getElementById("buscarLinea").innerHTML = "Linea:";
+    document.getElementById("buscarTurno").innerHTML = "Turno:";
+    document.getElementById("buscarFalla").innerHTML = "Falla:";
+    document.getElementById("buscarFechaOut").innerHTML = "Fecha Out:";
+    document.getElementById("buscarEstado").innerHTML = "Estado:";
+}
+
+//To complete Placa/Pantalla info
+function completeInfo(element){
+    document.getElementById("buscarFechaIn").innerText = `Fecha In: ${element.fechaIn.getDate()}-${element.fechaIn.getMonth()+1}-${element.fechaIn.getFullYear()}`;
+    document.getElementById("buscarModelo").innerText = `Modelo: ${element.sku}`;
+    document.getElementById("buscarLinea").innerText = `Linea: ${element.linea}`;
+    document.getElementById("buscarTurno").innerText = `Turno: ${element.turno}`;
+    document.getElementById("buscarFalla").innerText = `Falla: ${element.fallaLinea}`;
+    element.fechaOut ? document.getElementById("buscarFechaOut").innerText = `Fecha Out: ${element.fechaOut.getDate()}-${element.fechaOut.getMonth()+1}-${element.fechaOut.getFullYear()}` : document.getElementById("buscarFechaOut").innerHTML = "Fecha Out:"; ;
+    element.estado ? document.getElementById("buscarEstado").innerText = `Estado: ${element.estado}` : document.getElementById("buscarEstado").innerHTML = "Estado:";
+}
+
 /* ++++++++++++++++++++++++++++++++++++ Main program ++++++++++++++++++++++++++++++++++++ */
 
 let usuario;
-let usuarioStorage = localStorage.getItem("usuario");
+let usuarioStorage = sessionStorage.getItem("usuario");
 
 //User already logged in
 if(usuarioStorage){
@@ -160,14 +183,14 @@ if(usuarioStorage){
   describeUser(usuario);
     
   //Para deshabilitar las opciones no deseadas para el usuario "usuario"
-    if(localStorage.getItem("usuario") === "usuario"){
+    if(sessionStorage.getItem("usuario") === "usuario"){
         disable("btnInPlacas","modalInPlacas");
         disable("btnInPantallas","modalInPantallas");
         disable("btnOutElementos","modalOutElementos");
     }
 
   //Opciones habilitadas para el usuario "admin"
-    if(localStorage.getItem("usuario")==="admin"){
+    if(sessionStorage.getItem("usuario")==="admin"){
                 
         /* ---------------------------- Funcionamiento del modal de placas ----------------------------*/
 
@@ -339,7 +362,7 @@ if(usuarioStorage){
 
   //Opciones habilitadas para el usuario "admin" y "usuario"
     /* -------------- Funcionamiento del modal de Reportes -------------- */
-    if(localStorage.getItem("usuario")==="admin" || localStorage.getItem("usuario") === "usuario"){
+    if(sessionStorage.getItem("usuario")==="admin" || sessionStorage.getItem("usuario") === "usuario"){
 
         //Para que los campos queden vacios al ingresar
         btnCerrarReportes.addEventListener('click', ()=>{                        
@@ -453,6 +476,33 @@ if(usuarioStorage){
 
             }
         
+            //Funcionalidad del boton "Buscar placa/pantalla", que se encuentra dentro del modal Reportes
+            let buscarId = document.getElementById("buscarId");
+            buscarId.addEventListener(`input`,() =>{
+                let buscarPlaca = arrPlacas.some(e => e.imei === buscarId.value);
+                let buscarPantalla = arrPantallas.some(e => e.imei === buscarId.value);
+                eraseInfo();
+
+                if(buscarPlaca){
+                    for(const placa of arrPlacas){
+                        if (placa.imei === buscarId.value){
+                            completeInfo(placa);
+                        }
+                    }
+                }
+                if(buscarPantalla){
+                    for(const placa of arrPantallas){
+                        if (placa.imei === buscarId.value){
+                            completeInfo(placa);
+                       }
+                    }
+                }
+                //Para que los campos queden vacios al ingresar
+                btnVolver.addEventListener('click', ()=>{
+                    cleanInputs(buscarId);
+                    eraseInfo();
+                })
+            })
         })
     }
    
@@ -472,10 +522,10 @@ if(usuarioStorage){
             return new Promise((resolve) => {
             if (usuario != ""){
                 resolve();
-                localStorage.setItem("usuario", usuario);
+                sessionStorage.setItem("usuario", usuario);
 
                 //Para deshabilitar las opciones no deseadas para el usuario "usuario"
-                if(localStorage.getItem("usuario") === "usuario"){
+                if(sessionStorage.getItem("usuario") === "usuario"){
                     disable("btnInPlacas","modalInPlacas");
                     disable("btnInPantallas","modalInPantallas");
                     disable("btnOutElementos","modalOutElementos");                    
@@ -484,7 +534,7 @@ if(usuarioStorage){
                 describeUser(usuario);
 
                 //Opciones habilitadas para el usuario "admin"
-                if(localStorage.getItem("usuario")==="admin"){
+                if(sessionStorage.getItem("usuario")==="admin"){
                
                     /* ---------------------------- Funcionamiento del modal de placas ----------------------------*/
 
@@ -655,7 +705,7 @@ if(usuarioStorage){
                 }
                 
                 /* -------------- Funcionamiento del modal de Reportes (habilitada para ambos usuarios) -------------- */
-                if(localStorage.getItem("usuario")==="admin" || localStorage.getItem("usuario") === "usuario"){
+                if(sessionStorage.getItem("usuario")==="admin" || sessionStorage.getItem("usuario") === "usuario"){
 
                     //Para que los campos queden vacios al ingresar
                     btnCerrarReportes.addEventListener('click', ()=>{                        
@@ -769,6 +819,34 @@ if(usuarioStorage){
 
                         }
                     
+                        //Funcionalidad del boton "Buscar placa/pantalla", que se encuentra dentro del modal Reportes
+                        let buscarId = document.getElementById("buscarId");
+                        buscarId.addEventListener(`input`,() =>{
+                            let buscarPlaca = arrPlacas.some(e => e.imei === buscarId.value);
+                            let buscarPantalla = arrPantallas.some(e => e.imei === buscarId.value);
+                            eraseInfo();
+
+                            if(buscarPlaca){
+                                for(const placa of arrPlacas){
+                                    if (placa.imei === buscarId.value){
+                                        completeInfo(placa);
+                                   }
+                                }
+                            }
+                            if(buscarPantalla){
+                                for(const placa of arrPantallas){
+                                    if (placa.imei === buscarId.value){
+                                        completeInfo(placa);
+                                   }
+                                }
+                            }
+                            //Para que los campos queden vacios al ingresar
+                            btnVolver.addEventListener('click', ()=>{
+                                cleanInputs(buscarId); 
+                                eraseInfo();
+                            })
+                        })
+
                     })
                 }
 
@@ -781,7 +859,7 @@ if(usuarioStorage){
 }
 
 btnLogOut.addEventListener('click', ()=>{
-    localStorage.clear();
+    sessionStorage.clear();
 })
 
 

@@ -47,11 +47,20 @@
     <Main class="divPrincipal">
 
         <!-- Ingreso de elementos -->
-        <div class="divIngresoElementos">
+        <div class="divIngresoElementos">            
             <!-- Placas -->
             <div class="divIngresoPlacas">
-                <!-- Boton para ingresar al modal de placas -->
-                <button id="btnInPlacas" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalInPlacas" data-bs-whatever="@mdo">Ingreso Placas</button>
+
+                <div class="card col" style="width: 18rem;">
+                    <img src="./media/placa.jpg" class="card-img-top" alt="placa">
+                    <div class="card-body">
+                        <h5 class="card-title">Placas</h5>
+                        <p class="card-text">Módulo para el ingreso de placas al sector de reparación</p>
+                        <!-- Boton para ingresar al modal de placas -->
+                        <button id="btnInPlacas" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalInPlacas" data-bs-whatever="@mdo">Ingreso Placas</button>
+                    </div>
+                </div>
+                
                 
                 <!-- Modal de placas -->
                 <div class="modal fade" id="modalInPlacas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -96,8 +105,17 @@
 
             <!-- Pantallas -->
             <div class="divIngresoPantallas">
-                <!-- Boton para ingresar al modal de pantallas -->
-                <button id="btnInPantallas" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalInPantallas" data-bs-whatever="@mdo">Ingreso Pantallas</button>
+
+                <div class="card" style="width: 18rem;">
+                    <img src="./media/pantalla.jpg" class="card-img-top" alt="pantalla">
+                    <div class="card-body">
+                        <h5 class="card-title">Pantallas</h5>
+                        <p class="card-text">Módulo para el ingreso de pantallas al sector de reparación</p>
+                        <!-- Boton para ingresar al modal de pantallas -->
+                        <button id="btnInPantallas" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalInPantallas" data-bs-whatever="@mdo">Ingreso Pantallas</button>
+                    </div>
+                </div>
+
                 
                 <!-- Modal de pantallas -->
                 <div class="modal fade" id="modalInPantallas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -162,13 +180,12 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="elementEstado" class="col-form-label">Estado:</label>
-                                    <!-- <input type="text" class="form-control" id="elementEstado"> -->
                                     <select id = "elementEstado" class="form-select" aria-label="Default select example">
-                                        <option selected>Selectione el estado final</option>
+                                        <option selected>Seleccione el estado final</option>
                                         <option value="1">OK</option>
                                         <option value="2">SCP</option>
                                         <option value="3">RMA</option>
-                                      </select>
+                                    </select>
                                 </div>
                             </form>
                         </div>
@@ -206,11 +223,39 @@
                             </form>
                         </div>
                         <div class="modal-footer">
+                            <button class="btn btn-secondary" data-bs-target="#modalBusarInd" data-bs-toggle="modal">Buscar placa/pantalla</button>
                             <button id="btnCerrarReportes" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="modalBusarInd" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header bg-dark text-white">
+                      <h5 class="modal-title" id="exampleModalToggleLabel2">Buscar</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="buscarId" class="col-form-label">IMEI/SN:</label>
+                                <input type="text" class="form-control" id="buscarId">
+                                <p id="buscarFechaIn">Fecha In:</p>
+                                <p id="buscarModelo">Modelo:</p>
+                                <p id="buscarLinea">Linea:</p>
+                                <p id="buscarTurno">Turno:</p>
+                                <p id="buscarFalla">Falla:</p>
+                                <p id="buscarFechaOut">Fecha Out:</p>
+                                <p id="buscarEstado">Estado:</p>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-secondary" id="btnVolver" data-bs-target="#modalReportes" data-bs-toggle="modal">Volver a reportes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </div>
 
     </Main>
