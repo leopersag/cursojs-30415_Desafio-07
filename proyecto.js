@@ -69,40 +69,68 @@ class stock{
 //Utilización del fetch - Trayendo datos preguardados de placas
 const traerPlacas = async () => {
     let a = 0;
-    try {
-        const dataPlacas = await fetch ("./placas.json");
-        const objetoPlacas = await dataPlacas.json();  
-        for(let e of objetoPlacas){
+    if (localStorage){
+        const localStoragePlacas = JSON.parse(localStorage.getItem("Placas"));
+        for(const e of localStoragePlacas){
             arrPlacas.push(new placa(new Date(Date.parse(e.fechaIn)), e.sku, e.linea, e.turno, e.imei, e.fallaLinea,));
             if(e.disponible === false){
-                arrPlacas[a].fechaOut = new Date(Date.parse(objetoPlacas[a].fechaOut));
-                arrPlacas[a].estado = objetoPlacas[a].estado;
-                arrPlacas[a].disponible = objetoPlacas[a].disponible;
+                arrPlacas[a].fechaOut = new Date(Date.parse(localStoragePlacas[a].fechaOut));
+                arrPlacas[a].estado = localStoragePlacas[a].estado;
+                arrPlacas[a].disponible = localStoragePlacas[a].disponible;
             }
             a++;
-        }  
-    } catch (error) {
-        console.log(error);        
-    }
+        }
+
+    }else{
+        try {
+            const dataPlacas = await fetch ("./placas.json");
+            const objetoPlacas = await dataPlacas.json();  
+            for(let e of objetoPlacas){
+                arrPlacas.push(new placa(new Date(Date.parse(e.fechaIn)), e.sku, e.linea, e.turno, e.imei, e.fallaLinea,));
+                if(e.disponible === false){
+                    arrPlacas[a].fechaOut = new Date(Date.parse(objetoPlacas[a].fechaOut));
+                    arrPlacas[a].estado = objetoPlacas[a].estado;
+                    arrPlacas[a].disponible = objetoPlacas[a].disponible;
+                }
+                a++;
+            }  
+        } catch (error) {
+            console.log(error);        
+        }
+    }   
 }
 
 //Utilización del Axios - Trayendo datos preguardados de pantallas
 const traerPantallas = async () => {
     let a = 0;
-    try {
-        let dataPantallas = await axios ("./pantallas.json");
-        let objetoPantallas = dataPantallas.data;          
-        for(let e of objetoPantallas){
-            arrPantallas.push(new pantalla(new Date(Date.parse(e.fechaIn)), e.sku, e.linea, e.turno, e.imei, e.fallaLinea,));
+    if (localStorage){
+        const localStoragePantallas = JSON.parse(localStorage.getItem("Pantallas"));
+        for(const e of localStoragePantallas){
+            arrPantallas.push(new placa(new Date(Date.parse(e.fechaIn)), e.sku, e.linea, e.turno, e.imei, e.fallaLinea,));
             if(e.disponible === false){
-                arrPantallas[a].fechaOut = new Date(Date.parse(objetoPantallas[a].fechaOut));
-                arrPantallas[a].estado = objetoPantallas[a].estado;
-                arrPantallas[a].disponible = objetoPantallas[a].disponible;
+                arrPantallas[a].fechaOut = new Date(Date.parse(localStoragePantallas[a].fechaOut));
+                arrPantallas[a].estado = localStoragePantallas[a].estado;
+                arrPantallas[a].disponible = localStoragePantallas[a].disponible;
             }
             a++;
         }
-    } catch (error) {
-        console.log(error);        
+
+    }else{
+        try {
+            let dataPantallas = await axios ("./pantallas.json");
+            let objetoPantallas = dataPantallas.data;          
+            for(let e of objetoPantallas){
+                arrPantallas.push(new pantalla(new Date(Date.parse(e.fechaIn)), e.sku, e.linea, e.turno, e.imei, e.fallaLinea,));
+                if(e.disponible === false){
+                    arrPantallas[a].fechaOut = new Date(Date.parse(objetoPantallas[a].fechaOut));
+                    arrPantallas[a].estado = objetoPantallas[a].estado;
+                    arrPantallas[a].disponible = objetoPantallas[a].disponible;
+                }
+                a++;
+            }
+        } catch (error) {
+            console.log(error);        
+        }
     }
 }
 
@@ -183,6 +211,7 @@ function modalPlacas(){
             //si el elemento NO existe en el stock actual guarda el valor
             if(!(arrPlacas.filter(e => e.disponible == true).some(e => e.imei === imei.value))){
                 arrPlacas.push(new placa(fechaIn, sku.value, linea.value, turno.value, imei.value, fallaLinea.value,));
+                localStorage.setItem("Placas",JSON.stringify(arrPlacas));
                 cleanInputs(lineaPlaca,imeiPlaca,fallaPlaca);
                 Swal.fire({
                     position:'bottom-end',
@@ -231,7 +260,8 @@ function modalPantallas(){
 
         if(sku.value && linea.value && turno.value && imei.value && fallaLinea.value){
             if(!(arrPantallas.filter(e => e.disponible == true).some(e => e.imei === imei.value))){
-                arrPantallas.push(new pantalla(fechaIn, sku.value, linea.value, turno.value, imei.value, fallaLinea.value,));                                
+                arrPantallas.push(new pantalla(fechaIn, sku.value, linea.value, turno.value, imei.value, fallaLinea.value,));
+                localStorage.setItem("Pantallas",JSON.stringify(arrPantallas));                
                 cleanInputs(lineaPantalla,imeiPantalla,fallaPantalla);
                 Swal.fire({
                     position:'bottom-end',
@@ -294,12 +324,14 @@ function modalEgreso(){
                         for (const placa of arrPlacas.filter(e => e.disponible == true)){
                             if (placa.imei === darSalida.value){
                                 placa.salida();
+                                localStorage.setItem("Placas",JSON.stringify(arrPlacas));
                             }
                         }
                     }if(existePantalla){
                             for (const pantalla of arrPantallas.filter(e => e.disponible == true)){
                                 if (pantalla.imei === darSalida.value){
                                     pantalla.salida();
+                                    localStorage.setItem("Pantallas",JSON.stringify(arrPantallas));
                                 }
                             }
                     }
@@ -500,8 +532,8 @@ if(usuarioStorage){
     confirmButtonText: 'OK'
   });
 
-  describeUser(usuario);
-    
+    describeUser(usuario);
+        
   //Para deshabilitar las opciones no deseadas para el usuario "usuario"
     if(sessionStorage.getItem("usuario") === "usuario"){
         disable("btnInPlacas","modalInPlacas");
@@ -517,12 +549,12 @@ if(usuarioStorage){
     }
 
   //Opciones habilitadas para el usuario "admin" y "usuario"
-  if(sessionStorage.getItem("usuario")==="admin" || sessionStorage.getItem("usuario") === "usuario"){
+    if(sessionStorage.getItem("usuario")==="admin" || sessionStorage.getItem("usuario") === "usuario"){
         modalReportes();
     }
 
 //User not logged in
-}else{	
+}else{
     const { usuario: user } = Swal.fire({
         title: 'Selecione su modo de uso',
         allowOutsideClick: false,
