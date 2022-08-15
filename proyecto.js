@@ -69,8 +69,8 @@ class stock{
 //Utilización del fetch - Trayendo datos preguardados de placas
 const traerPlacas = async () => {
     let a = 0;
-    if (localStorage){
-        const localStoragePlacas = JSON.parse(localStorage.getItem("Placas"));
+    const localStoragePlacas = JSON.parse(localStorage.getItem("Placas"));
+    if (localStoragePlacas){
         for(const e of localStoragePlacas){
             arrPlacas.push(new placa(new Date(Date.parse(e.fechaIn)), e.sku, e.linea, e.turno, e.imei, e.fallaLinea,));
             if(e.disponible === false){
@@ -103,8 +103,8 @@ const traerPlacas = async () => {
 //Utilización del Axios - Trayendo datos preguardados de pantallas
 const traerPantallas = async () => {
     let a = 0;
-    if (localStorage){
-        const localStoragePantallas = JSON.parse(localStorage.getItem("Pantallas"));
+    const localStoragePantallas = JSON.parse(localStorage.getItem("Pantallas"));
+    if (localStoragePantallas){
         for(const e of localStoragePantallas){
             arrPantallas.push(new placa(new Date(Date.parse(e.fechaIn)), e.sku, e.linea, e.turno, e.imei, e.fallaLinea,));
             if(e.disponible === false){
